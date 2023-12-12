@@ -1,6 +1,6 @@
 # DIP-Practicals
 1. Write program to read and display digital image using MATLAB or SCILAB
-    a. Become familiar with SCILAB/MATLAB Basic commands
+   # a. Become familiar with SCILAB/MATLAB Basic commands
     b. Read and display image in SCILAB/MATLAB
     c. Resize given image
     d. Convert given color image into gray-scale image
