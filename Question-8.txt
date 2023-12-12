@@ -1,0 +1,55 @@
+% Read a sample image (you can replace this with your image)
+originalImage = imread('cameraman.tif');
+
+% Display the original image
+figure;
+subplot(2, 3, 1);
+imshow(originalImage);
+title('Original Image');
+
+% Convert the image to double for processing
+originalImage = double(originalImage);
+
+% a. 1-D Convolution (Horizontal Low-pass Filter)
+hLowPassFilter = (1/3) * [1, 1, 1]; % Simple averaging filter
+horizontalFiltered = conv2(originalImage, hLowPassFilter, 'same');
+subplot(2, 3, 2);
+imshow(uint8(horizontalFiltered));
+title('1-D Convolution (Horizontal Low-pass)');
+
+% b. 1-D Convolution (Vertical High-pass Filter)
+vHighPassFilter = [1; -2; 1]; % Simple vertical high-pass filter
+verticalFiltered = conv2(originalImage, vHighPassFilter, 'same');
+subplot(2, 3, 3);
+imshow(uint8(verticalFiltered));
+title('1-D Convolution (Vertical High-pass)');
+
+% c. 2-D Convolution (Low-pass Filter)
+lowPassFilter = (1/9) * ones(3); % 3x3 averaging filter
+lowPassFiltered = conv2(originalImage, lowPassFilter, 'same');
+subplot(2, 3, 4);
+imshow(uint8(lowPassFiltered));
+title('2-D Convolution (Low-pass)');
+
+% d. 2-D Convolution (High-pass Filter)
+highPassFilter = [0, -1, 0; -1, 4, -1; 0, -1, 0]; % 3x3 Laplacian filter
+highPassFiltered = conv2(originalImage, highPassFilter, 'same');
+subplot(2, 3, 5);
+imshow(uint8(highPassFiltered));
+title('2-D Convolution (High-pass)');
+
+% e. Original Image with Added Noise
+noisyImage = originalImage + 25 * randn(size(originalImage));
+subplot(2, 3, 6);
+imshow(uint8(noisyImage));
+title('Original Image with Added Noise');
+
+% Display overall title
+sgtitle('Noise Removal using Spatial Filters');
+
+% Save images (optional)
+imwrite(uint8(horizontalFiltered), '1d_horizontal_lowpass_filtered_image.tif');
+imwrite(uint8(verticalFiltered), '1d_vertical_highpass_filtered_image.tif');
+imwrite(uint8(lowPassFiltered), '2d_lowpass_filtered_image.tif');
+imwrite(uint8(highPassFiltered), '2d_highpass_filtered_image.tif');
+imwrite(uint8(noisyImage), 'noisy_image_with_noise.tif');

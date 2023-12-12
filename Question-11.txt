@@ -1,0 +1,27 @@
+% Read a binary image (you can replace this with your binary image)
+binaryImage = imread('text_binary.png');
+
+% Display the original binary image
+figure;
+subplot(1, 3, 1);
+imshow(binaryImage);
+title('Original Binary Image');
+
+% Structuring element for morphological operations
+se = strel('square', 5); % Create a square structuring element of size 5x5
+
+% a. Erosion
+erodedImage = imerode(binaryImage, se);
+
+% Display the eroded image
+subplot(1, 3, 2);
+imshow(erodedImage);
+title('Eroded Image');
+
+% b. Dilation
+dilatedImage = imdilate(binaryImage, se);
+
+% Display the dilated image
+subplot(1, 3, 3);
+imshow(dilatedImage);
+title('Dilated Image');

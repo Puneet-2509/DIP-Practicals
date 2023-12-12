@@ -1,0 +1,56 @@
+% Create two random binary images
+image1 = randi([0, 1], [256, 256]);
+image2 = randi([0, 1], [256, 256]);
+
+% Display the original binary images
+figure;
+subplot(3, 2, 1);
+imshow(image1);
+title('Image 1');
+
+subplot(3, 2, 2);
+imshow(image2);
+title('Image 2');
+
+% a. AND operation between two images
+and_result = bitand(image1, image2);
+subplot(3, 2, 3);
+imshow(and_result);
+title('AND Result');
+
+% b. OR operation between two images
+or_result = bitor(image1, image2);
+subplot(3, 2, 4);
+imshow(or_result);
+title('OR Result');
+
+% c. Calculate intersection of two images
+intersection_result = image1 & image2;
+subplot(3, 2, 5);
+imshow(intersection_result);
+title('Intersection Result');
+
+% d. Water Marking using EX-OR operation
+watermark = randi([0, 1], [256, 256]);
+watermarked_image = bitxor(image1, watermark);
+subplot(3, 2, 6);
+imshow(watermarked_image);
+title('Watermarked Image');
+
+% e. NOT operation (Negative image)
+not_result = ~image1;
+figure;
+subplot(1, 2, 1);
+imshow(image1);
+title('Original Image');
+
+subplot(1, 2, 2);
+imshow(not_result);
+title('NOT Result (Negative Image)');
+
+% Save the images
+imwrite(and_result, 'and_result.jpg');
+imwrite(or_result, 'or_result.jpg');
+imwrite(intersection_result, 'intersection_result.jpg');
+imwrite(watermarked_image, 'watermarked_image.jpg');
+imwrite(not_result, 'negative_image.jpg');

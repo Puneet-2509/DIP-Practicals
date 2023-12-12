@@ -1,0 +1,41 @@
+% Create a random image
+img = randi([0, 255], [256, 256], 'uint8');
+
+% Display the original image
+figure;
+subplot(2, 3, 1);
+imshow(img);
+title('Original Image');
+
+% a. Obtain Negative image
+negative_img = 255 - img;
+subplot(2, 3, 2);
+imshow(negative_img);
+title('Negative Image');
+
+% b. Obtain Flip image
+flip_img = flipud(img);
+subplot(2, 3, 3);
+imshow(flip_img);
+title('Flipped Image');
+
+% c. Thresholding
+threshold_value = 128;
+thresholded_img = img > threshold_value;
+subplot(2, 3, 4);
+imshow(thresholded_img);
+title('Thresholded Image');
+
+% d. Contrast stretching
+min_val = double(min(img(:)));
+max_val = double(max(img(:)));
+stretched_img = uint8((double(img) - min_val) / (max_val - min_val) * 255);
+subplot(2, 3, 5);
+imshow(stretched_img);
+title('Contrast Stretched Image');
+
+% Save the images
+imwrite(negative_img, 'negative_image.jpg');
+imwrite(flip_img, 'flip_image.jpg');
+imwrite(thresholded_img, 'thresholded_image.jpg');
+imwrite(stretched_img, 'stretched_image.jpg');

@@ -1,0 +1,52 @@
+% Load the cameraman image
+originalImage = imread('cameraman.tif');
+
+% Convert the image to double
+originalImage = double(originalImage);
+
+% Display the original image
+figure;
+subplot(2, 3, 1);
+imshow(uint8(originalImage)); % Display the original image (converted back to uint8 for visualization)
+title('Original Image');
+
+% a. Introduce Salt and Pepper Noise
+noisyImage = imnoise(originalImage, 'salt & pepper', 0.02);
+subplot(2, 3, 2);
+imshow(uint8(noisyImage)); % Display the noisy image
+title('Image with Salt and Pepper Noise');
+
+% b. Remove Salt and Pepper Noise using Median Filter
+medianFiltered = medfilt2(noisyImage);
+subplot(2, 3, 3);
+imshow(uint8(medianFiltered)); % Display the median filtered image
+title('Median Filtered Image');
+
+% c. Introduce Gaussian Noise
+gaussianNoisyImage = imnoise(originalImage, 'gaussian', 0, 0.01);
+subplot(2, 3, 4);
+imshow(uint8(gaussianNoisyImage)); % Display the image with Gaussian Noise
+title('Image with Gaussian Noise');
+
+% c. Minimize Gaussian Noise using Wiener Filter
+estimatedNoise = gaussianNoisyImage - originalImage;
+wienerFiltered = wiener2(gaussianNoisyImage, [5, 5], estimatedNoise);
+subplot(2, 3, 5);
+imshow(uint8(wienerFiltered)); % Display the Wiener filtered image
+title('Wiener Filtered Image');
+
+% d. Minimize Gaussian Noise using Gaussian Filter
+gaussianFiltered = imgaussfilt(gaussianNoisyImage, 1);
+subplot(2, 3, 6);
+imshow(uint8(gaussianFiltered)); % Display the Gaussian filtered image
+title('Gaussian Filtered Image');
+
+% Display overall title
+sgtitle('Image Restoration Techniques');
+
+% Save images (optional)
+imwrite(uint8(noisyImage), 'noisy_image.tif');
+imwrite(uint8(medianFiltered), 'median_filtered_image.tif');
+imwrite(uint8(gaussianNoisyImage), 'gaussian_noisy_image.tif');
+imwrite(uint8(wienerFiltered), 'wiener_filtered_image.tif');
+imwrite(uint8(gaussianFiltered), 'gaussian_filtered_image.tif');

@@ -1,0 +1,57 @@
+% Read a random colorful image
+img = randi([0, 255], [256, 256, 3], 'uint8');
+
+% Display the original image
+figure;
+subplot(3, 3, 1);
+imshow(img);
+title('Original Image');
+
+% Resize the image
+resized_img = imresize(img, 0.5);
+subplot(3, 3, 2);
+imshow(resized_img);
+title('Resized Image');
+
+% Convert to gray-scale
+gray_img = rgb2gray(img);
+subplot(3, 3, 3);
+imshow(gray_img);
+title('Gray-Scale Image');
+
+% Convert to black & white
+bw_img = im2bw(img, 0.5);
+subplot(3, 3, 4);
+imshow(bw_img);
+title('Black & White Image');
+
+% Draw image profile
+profile = img(100, :, :);
+subplot(3, 3, 5);
+plot(profile(:, 1), 'r');
+hold on;
+plot(profile(:, 2), 'g');
+plot(profile(:, 3), 'b');
+title('Image Profile');
+legend('Red', 'Green', 'Blue');
+
+% Separate R, G, B planes
+r_plane = img(:, :, 1);
+g_plane = img(:, :, 2);
+b_plane = img(:, :, 3);
+
+% Create color image using R, G, B planes
+reconstructed_img = cat(3, r_plane, g_plane, b_plane);
+subplot(3, 3, 6);
+imshow(reconstructed_img);
+title('Reconstructed Image');
+
+% Flow control and loop
+subplot(3, 3, 7:9);
+for i = 1:5
+    text(0.1, 0.9 - 0.15*i, ['Iteration: ' num2str(i)], 'FontSize', 12);
+end
+axis off;
+
+% Write 2-D data to an image file
+imwrite(gray_img, 'output_image.jpg');

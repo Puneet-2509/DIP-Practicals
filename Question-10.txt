@@ -1,0 +1,64 @@
+Using MATLAB:
+
+% Read a sample image (you can replace this with your image)
+originalImage = imread('cameraman.tif');
+
+% Display the original image
+figure;
+subplot(2, 3, 1);
+imshow(originalImage);
+title('Original Image');
+
+% Convert the image to double for processing
+originalImage = double(originalImage);
+
+% Define edge detection masks (kernels)
+sobelMaskX = [-1 0 1; -2 0 2; -1 0 1];
+sobelMaskY = [-1 -2 -1; 0 0 0; 1 2 1];
+
+prewittMaskX = [-1 0 1; -1 0 1; -1 0 1];
+prewittMaskY = [-1 -1 -1; 0 0 0; 1 1 1];
+
+robertsMaskX = [1 0; 0 -1];
+robertsMaskY = [0 1; -1 0];
+
+% b. Apply Sobel edge detection
+sobelFilteredX = conv2(originalImage, sobelMaskX, 'same');
+sobelFilteredY = conv2(originalImage, sobelMaskY, 'same');
+sobelMagnitude = sqrt(sobelFilteredX.^2 + sobelFilteredY.^2);
+
+% Display Sobel edge detection results
+subplot(2, 3, 2);
+imshow(uint8(sobelFilteredX));
+title('Sobel X-direction');
+
+subplot(2, 3, 3);
+imshow(uint8(sobelFilteredY));
+title('Sobel Y-direction');
+
+subplot(2, 3, 4);
+imshow(uint8(sobelMagnitude));
+title('Sobel Magnitude');
+
+% c. Apply Prewitt edge detection
+prewittFilteredX = conv2(originalImage, prewittMaskX, 'same');
+prewittFilteredY = conv2(originalImage, prewittMaskY, 'same');
+prewittMagnitude = sqrt(prewittFilteredX.^2 + prewittFilteredY.^2);
+
+% Display Prewitt edge detection results
+subplot(2, 3, 5);
+imshow(uint8(prewittMagnitude));
+title('Prewitt Magnitude');
+
+% d. Apply Roberts edge detection
+robertsFilteredX = conv2(originalImage, robertsMaskX, 'same');
+robertsFilteredY = conv2(originalImage, robertsMaskY, 'same');
+robertsMagnitude = sqrt(robertsFilteredX.^2 + robertsFilteredY.^2);
+
+% Display Roberts edge detection results
+subplot(2, 3, 6);
+imshow(uint8(robertsMagnitude));
+title('Roberts Magnitude');
+
+% Display overall title
+sgtitle('Edge Detection using Different Masks');

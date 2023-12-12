@@ -1,0 +1,45 @@
+% Create two random images
+image1 = randi([0, 255], [256, 256], 'uint8');
+image2 = randi([0, 255], [256, 256], 'uint8');
+
+% Display the original images
+figure;
+subplot(2, 3, 1);
+imshow(image1);
+title('Image 1');
+
+subplot(2, 3, 2);
+imshow(image2);
+title('Image 2');
+
+% a. Addition of two images
+addition_result = imadd(image1, image2);
+subplot(2, 3, 3);
+imshow(addition_result);
+title('Addition Result');
+
+% b. Subtract one image from the other
+subtraction_result = imsubtract(image1, image2);
+subplot(2, 3, 4);
+imshow(subtraction_result);
+title('Subtraction Result');
+
+% c. Calculate mean value of image
+mean_value_image1 = mean(image1(:));
+mean_value_image2 = mean(image2(:));
+
+% Display mean values
+disp(['Mean value of Image 1: ' num2str(mean_value_image1)]);
+disp(['Mean value of Image 2: ' num2str(mean_value_image2)]);
+
+% d. Different Brightness by changing mean value
+brightness_change_factor = 50;
+brightened_image1 = image1 + brightness_change_factor;
+subplot(2, 3, 5);
+imshow(brightened_image1);
+title('Brightened Image 1');
+
+% Save the images
+imwrite(addition_result, 'addition_result.jpg');
+imwrite(subtraction_result, 'subtraction_result.jpg');
+imwrite(brightened_image1, 'brightened_image1.jpg');

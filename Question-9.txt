@@ -1,0 +1,78 @@
+% Read a sample image (you can replace this with your image)
+originalImage = imread('cameraman.tif');
+
+% Display the original image
+figure;
+subplot(2, 3, 1);
+imshow(originalImage);
+title('Original Image');
+
+% Convert the image to double for processing
+originalImage = double(originalImage);
+
+% a. Apply FFT on the given image
+fftImage = fft2(originalImage);
+magnitudeSpectrum = log(1 + abs(fftshift(fftImage)));
+
+% Display the magnitude spectrum
+subplot(2, 3, 2);
+imshow(magnitudeSpectrum, []);
+title('Magnitude Spectrum (log scale)');
+
+% b. Perform Low-pass Filtering in Frequency Domain
+[m, n] = size(originalImage);
+u = 0:(m-1);
+v = 0:(n-1);
+
+% Compute the indices for the center of the image
+centerX = floor(m / 2) + 1;
+centerY = floor(n / 2) + 1;
+
+% Create a low-pass filter (circular filter)
+radius = 30;
+lowPassFilter = zeros(m, n);
+for i = 1:m
+    for j = 1:n
+        distance = sqrt((u(i) - centerX)^2 + (v(j) - centerY)^2);
+        if distance <= radius
+            lowPassFilter(i, j) = 1;
+        end
+    end
+end
+
+% Apply the low-pass filter in the frequency domain
+lowPassFiltered = fftImage .* lowPassFilter;
+
+% Display the low-pass filtered magnitude spectrum
+subplot(2, 3, 3);
+imshow(log(1 + abs(fftshift(lowPassFiltered))), []);
+title('Low-pass Filtered Magnitude Spectrum (log scale)');
+
+% c. Perform High-pass Filtering in Frequency Domain
+highPassFilter = 1 - lowPassFilter; % Invert the low-pass filter
+highPassFiltered = fftImage .* highPassFilter;
+
+% Display the high-pass filtered magnitude spectrum
+subplot(2, 3, 4);
+imshow(log(1 + abs(fftshift(highPassFiltered))), []);
+title('High-pass Filtered Magnitude Spectrum (log scale)');
+
+% d. Apply IFFT to reconstruct images
+lowPassReconstructed = ifft2(ifftshift(lowPassFiltered));
+highPassReconstructed = ifft2(ifftshift(highPassFiltered));
+
+% Display the low-pass and high-pass reconstructed images
+subplot(2, 3, 5);
+imshow(uint8(abs(lowPassReconstructed)));
+title('Low-pass Reconstructed Image');
+
+subplot(2, 3, 6);
+imshow(uint8(abs(highPassReconstructed)));
+title('High-pass Reconstructed Image');
+
+% Display overall title
+sgtitle('Image Frequency Domain Filtering');
+
+% Save images (optional)
+imwrite(uint8(abs(lowPassReconstructed)), 'low_pass_reconstructed_image.tif');
+imwrite(uint8(abs(highPassReconstructed)), 'high_pass_reconstructed_image.tif');

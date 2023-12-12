@@ -1,0 +1,153 @@
+i) Using STANDARD Function:
+
+% Standard MATLAB function for histogram equalization
+img = randi([0, 255], [256, 256], 'uint8');
+
+% Display the original image
+figure;
+subplot(2, 3, 1);
+imshow(img);
+title('Original Image');
+
+% Calculate histogram
+subplot(2, 3, 2);
+imhist(img);
+title('Original Histogram');
+
+% Histogram equalization using histeq
+equalized_img = histeq(img);
+subplot(2, 3, 3);
+imshow(equalized_img);
+title('Equalized Image');
+
+% Display equalized histogram
+subplot(2, 3, 4);
+imhist(equalized_img);
+title('Equalized Histogram');
+
+
+ii) Without STANDARD Function:
+
+
+% Program without using standard MATLAB functions
+img = randi([0, 255], [256, 256], 'uint8');
+
+% Display the original image
+figure;
+subplot(2, 3, 1);
+imshow(img);
+title('Original Image');
+
+% Calculate histogram
+histogram = zeros(256, 1);
+[m, n] = size(img);
+
+for i = 1:m
+    for j = 1:n
+        intensity = img(i, j);
+        histogram(intensity + 1) = histogram(intensity + 1) + 1;
+    end
+end
+
+% Display original histogram
+subplot(2, 3, 2);
+bar(histogram);
+title('Original Histogram');
+
+% Histogram equalization without using histeq
+cdf = cumsum(histogram) / (m * n);
+equalized_img = zeros(m, n, 'uint8');
+
+for i = 1:m
+    for j = 1:n
+        intensity = img(i, j);
+        equalized_img(i, j) = uint8(255 * cdf(intensity + 1));
+    end
+end
+
+% Display equalized image
+subplot(2, 3, 3);
+imshow(equalized_img);
+title('Equalized Image');
+
+% Calculate equalized histogram
+equalized_histogram = zeros(256, 1);
+
+for i = 1:m
+    for j = 1:n
+        intensity = equalized_img(i, j);
+        equalized_histogram(intensity + 1) = equalized_histogram(intensity + 1) + 1;
+    end
+end
+
+% Display equalized histogram
+subplot(2, 3, 4);
+bar(equalized_histogram);
+title('Equalized Histogram');
+
+iii) Using C :
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void calculateHistogram(int *histogram, unsigned char *image, int size) {
+    for (int i = 0; i < size; ++i) {
+        histogram[image[i]]++;
+    }
+}
+
+void equalizeImage(unsigned char *image, int *histogram, int size) {
+    float cdf[256] = {0};
+
+    cdf[0] = (float)histogram[0] / size;
+    for (int i = 1; i < 256; ++i) {
+        cdf[i] = cdf[i - 1] + (float)histogram[i] / size;
+    }
+
+    for (int i = 0; i < size; ++i) {
+        image[i] = (unsigned char)(cdf[image[i]] * 255);
+    }
+}
+
+void printImage(unsigned char *image, int width, int height) {
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            char pixelChar = (image[i * width + j] < 128) ? '#' : ' ';
+            printf("%c", pixelChar);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int width = 10;  // Adjust the width of the image
+    int height = 10; // Adjust the height of the image
+    int size = width * height;
+
+    // Create a random image
+    unsigned char *image = (unsigned char *)malloc(size * sizeof(unsigned char));
+    for (int i = 0; i < size; ++i) {
+        image[i] = rand() % 256;
+    }
+
+    // Display the original image
+    printf("Original Image:\n");
+    printImage(image, width, height);
+
+    // Calculate histogram
+    int histogram[256] = {0};
+    calculateHistogram(histogram, image, size);
+
+    // Equalize image
+    equalizeImage(image, histogram, size);
+
+    // Display the equalized image
+    printf("\nEqualized Image:\n");
+    printImage(image, width, height);
+
+    free(image);
+
+    return 0;
+}
+
